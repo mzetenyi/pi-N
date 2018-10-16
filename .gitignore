@@ -1,0 +1,9 @@
+*.o
+*.html
+*~
+todel/
+.deps/
+results/
+docs/
+bin/
+lib/

@@ -1,0 +1,197 @@
+gsipipi = 4.01631
+grho_tilde = 5.96
+
+pi_0 {
+  spin = 0
+  isospin = 1
+  mass = 0.13498
+}
+
+pi_pm {
+  spin = 0
+  isospin = 1
+  mass = 0.13957
+}
+
+rho {
+  spin = 1
+  isospin = 1
+  mass = 0.77526
+  width = 0.1491
+}
+
+sigma {
+  spin = 0
+  isospin = 0
+  mass = 0.475
+  width = 0.55
+}
+
+Nucleon {
+  spin = 1/2
+  isospin = 1/2
+  mass = 0.9389
+}
+
+D1232 {
+  spin = 3/2
+  isospin = 3/2
+  l = 1
+  mass = 1.232
+  width = 0.117
+  BNpi = 1
+  BDpi = 0
+  BNrho = 0
+  BNsi = 0
+  g0 = 0.247574
+  g1 = 0
+  g2 = 0
+  g3 = 0
+  gsi = 0
+  gDpi = 0
+}
+
+N1440 {
+  spin = 1/2
+  isospin = 1/2
+  l = 1
+  mass = 1.44
+  width = 0.25
+  BNpi = 0.55
+  BDpi = 0.25
+  BNrho = 0.
+  BNsi = 0.15
+  g0 = 0.29908
+  g1 = 0.
+  g2 = 0.
+  g3 = 0.
+  gsi = 3.21966
+  gDpi = 1.83373
+}
+
+N1520 {
+  spin = -3/2
+  isospin = 1/2
+  l = 2
+  mass = 1.52
+  width = 0.1
+  BNpi = 0.55
+  BDpi = 0.15
+  BNrho = 0.15
+  BNsi = 0.04
+  g0 = 0.132058
+  g1 = 13.8624
+  g2 = 0.
+  g3 = 0.
+  gsi = 0.615289
+  gDpi = 0.0320377
+}
+
+N1535 {
+  spin = -1/2
+  isospin = 1/2
+  l = 0
+  mass = 1.535
+  width = 0.125
+  BNpi = 0.35
+  BDpi = 0.005
+  BNrho = 0.
+  BNsi = 0.02
+  g0 = 0.129011
+  g1 = 0.
+  g2 = 0.
+  g3 = 0.
+  gsi = 3.48129
+  gDpi = 0.0304558
+}
+
+N1650 {
+  spin = -1/2
+  isospin = 1/2
+  l = 0
+  mass = 1.655
+  width = 0.11
+  BNpi = 0.5
+  BDpi = 0.125
+  BNrho = 0.04
+  BNsi = 0.02
+  g0 = 0.114026
+  g1 = 0.517133
+  g2 = 0.
+  g3 = 0.
+  gsi = 2.36711
+  gDpi = 0.0684129
+}
+
+N1675 {
+  spin = -5/2
+  isospin = 1/2
+  l = 2
+  mass = 1.675
+  width = 0.13
+  BNpi = 0.35
+  BDpi = 0.55
+  BNrho = 0.01 // lower limit of upper limit in PDG
+  BNsi = 0.07
+  g0 = 0.000616671
+  g1 = 17.6781
+  g2 = 0.
+  g3 = 0.
+  gsi = 0.944336
+  gDpi = 0.
+}
+
+N1680 {
+  spin = 5/2
+  isospin = 1/2
+  l = 3
+  mass = 1.68
+  width = 0.12
+  BNpi = 0.65
+  BDpi = 0.1
+  BNrho = 0.03
+  BNsi = 0.11
+  g0 = 0.00284425
+  g1 = 12.0337
+  g2 = 0.
+  g3 = 0.
+  gsi = 0.249719
+  gDpi = 0.
+}
+
+D1600 {
+  spin = 3/2
+  isospin = 3/2
+  l = 1
+  mass = 1.6
+  width = 0.22
+  BNpi = 0.1
+  BDpi = 0.55
+  BNrho = 0.
+  BNsi = 0
+  g0 = 0.0270197
+  g1 = 0.
+  g2 = 0.
+  g3 = 0.
+  gsi = 0
+  gDpi = 0.052808
+}
+
+D1620 {
+  spin = -1/2
+  isospin = 3/2
+  l = 0
+  mass = 1.63
+  width = 0.13
+  BNpi = 0.2
+  BDpi = 0.45
+  BNrho = 0.07
+  BNsi = 0
+  g0 = 0.14215
+  g1 = 1.68006
+  g2 = 0.
+  g3 = 0.
+  gsi = 0
+  gDpi = 0.142944
+}
+

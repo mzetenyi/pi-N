@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# generate 100 events with only s-channel contribution of the resonances N(1520) and N(1440) with a relative - sign of their amplitudes:
+bin/piNdilep load[dat/model_params] event_gen N1520 N1440 sch negN1440 seed=123456 plab=0.69 Nevent=100 > results/events/piNdilep_events_N1520-N1440_sch_plab0.69
+
+# tabulate the density matrix of the virtual photon for the same selection of contributions as above, at intervals of 0.05 GeV in virtual photon mass:
+bin/piNdilep load[dat/model_params] tab_density_matrix N1440 N1520 negN1440 sch plab=0.69 dM=0.05 > results/density_matrix/piNdilep_density_matrix_N1440-N1520_plab0.69
+
