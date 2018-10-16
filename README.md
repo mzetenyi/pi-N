@@ -57,9 +57,9 @@ redirected to files by the `jobs` script.
 All parameters/options to the code can be specified in two ways:
 
 1. as a command line option in the form `parameter=<value>` (no spaces are allowed),
-2. in a file that is loaded by the command line option `load[<path of file>]`.
+2. in a file that is loaded by the command line option `load[<path_of_file>]`.
 
-As an example for the latter look at the file 
+As an example for the latter, look at the file 
 [dat/model_params](https://github.com/mzetenyi/pi-N/blob/master/dat/model_params).
 As you can see, some of the parameters are arranged in groups via
 ```
