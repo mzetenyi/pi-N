@@ -14,7 +14,8 @@ collisions"*, Phys. Lett. **B764** (2017) 282.
 ## Getting started
 ### Download
 
-If you are not using `git` and `GitHub`, just click on the green "Clone or download" button and in the popup window
+If you are not using `git` and `GitHub`, just click on the green "Clone or download" button in the top-right corner
+of the [project page](https://github.com/mzetenyi/pi-N) and in the popup window
 click "Download ZIP". Save the file and uncompress it.
 
 ### Compile
