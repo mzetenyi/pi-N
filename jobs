@@ -1,5 +1,8 @@
 #!/bin/bash
 
+mkdir -p results/events
+mkdir results/density_matrix
+
 # generate 100 events with only s-channel contribution of the resonances N(1520) and N(1440) with a relative - sign of their amplitudes:
 bin/piNdilep load[dat/model_params] event_gen N1520 N1440 sch negN1440 seed=123456 plab=0.69 Nevent=100 > results/events/piNdilep_events_N1520-N1440_sch_plab0.69
 
