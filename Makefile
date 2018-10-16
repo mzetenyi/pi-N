@@ -3,7 +3,7 @@ ROOTNAME = pi-N
 ROOTDIR = $(WORKDIR)/$(ROOTNAME)
 INCLUDE_DIR = $(ROOTDIR)/include
 SOURCE_DIR = $(ROOTDIR)/src
-LIB_DIR = $(ROOTDIR)/lib
+OBJ_DIR = $(ROOTDIR)/obj
 EXEC_DIR = $(ROOTDIR)/bin
 DOCS_DIR = $(ROOTDIR)/docs
 DEP_DIR = $(ROOTDIR)/.deps
@@ -13,7 +13,7 @@ vpath %.h   $(INCLUDE_DIR)
 vpath %.hpp $(INCLUDE_DIR)
 vpath %.c   $(SOURCE_DIR)
 vpath %.cpp $(SOURCE_DIR)
-vpath %.o   $(LIB_DIR)
+vpath %.o   $(OBJ_DIR)
 vpath %     $(EXEC_DIR)
 vpath %.ii  $(PREPROC_DIR)
 
@@ -23,7 +23,7 @@ SHELL = /bin/bash
 CPP = g++
 
 INCLUDE_OPTIONS = -iquote$(INCLUDE_DIR)
-LIB_OPTIONS = -L$(LIB_DIR)
+LIB_OPTIONS = -L$(OBJ_DIR)
 WARN_OPTION = -Wall  # all warnings
 #WARN_OPTION = -w   # no warnings
 OPTIMIZE_OPTION = -O3
@@ -35,15 +35,24 @@ MAKEDEPEND = gcc $(INCLUDE_OPTIONS) -MM $(CPPFLAGS) -o $(DEP_DIR)/$*.d $<
 
 df = $(DEP_DIR)/$(*F)
 
-%.o : %.cpp
+%.o : %.cpp | $(OBJ_DIR) $(DEP_DIR) $(EXEC_DIR)
 	@$(MAKEDEPEND); \
           cp $(df).d $(df).P; \
           sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
               -e '/^$$/ d' -e 's/$$/ :/' < $(df).d >> $(df).P; \
           rm -f $(df).d
-	$(CPP) $(OPTIONS) -c -o $(LIB_DIR)/$@ $<
+	$(CPP) $(OPTIONS) -c -o $(OBJ_DIR)/$@ $<
 
 -include $(DEP_DIR)/*.P
+
+$(OBJ_DIR):
+	mkdir $(OBJ_DIR)
+
+$(DEP_DIR):
+	mkdir $(DEP_DIR)
+
+$(EXEC_DIR):
+	mkdir $(EXEC_DIR)
 
 %.ii: %.cpp
 	$(CPP) $(OPTIONS) -E $< > $(PREPROC_DIR)/$@
@@ -59,7 +68,7 @@ docs:
 
 .PHONY: clean
 clean:
-	rm -f $(LIB_DIR)/*.o 
+	rm -f $(OBJ_DIR)/*.o 
 
 piNdilep: units.o utils.o halfint.o Array.o Vectors.o Spinors.o wavefunc.o Config.o RandomNumberGenerator.o Histogram.o piNdilep.o Vrancx.o
 	$(CPP) $(OPTIONS) -o $(EXEC_DIR)/$@ $^ -lm
