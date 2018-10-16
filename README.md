@@ -24,7 +24,7 @@ You need a c++11 compliant compiler and `make`. (I use g++ 4.8.5, and Gnu Make 4
 compiler in your $PATH, you should modify line 20 of the [Makefile](https://github.com/mzetenyi/pi-N/blob/master/Makefile)
 like this:
 ```
-CPP = <ful path of compiler>
+CPP = <ful_path_of_compiler>
 ```
 In order to compile, navigate to the 
 main directory of the project (called `pi-N-master` if you downloaded the ZIP file and `pi-N` if you used `git` to 
