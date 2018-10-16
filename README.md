@@ -1,5 +1,5 @@
 # pi-N
-> Codes for calculating dilepton production in pion+nucleon collisions.
+> Codes for calculating dilepton production in pion-nucleon collisions.
 
 This repository contains codes for the calculation of the angular distribution of di-electron production in pion-nucleon 
 collisions using the model of [1]. In addition to calculating differential cross sections and anysotropy
