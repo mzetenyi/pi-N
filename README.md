@@ -98,7 +98,7 @@ Contribution of each baryon resonance can be included in the calculation by spec
 The options `negN1440` or `negD1600` will multiply the corresponding amplitudes by -1. (This only effects the
 interference terms with other resonance contributions.)
 Including `sch` or `uch` in the command line results in a calculation of only s-channel (or only u-channel) contributions
-of all resonances. (The default is calculate both s- and u-channels.) E.g.
+of all resonances. (The default is to calculate both s- and u-channels.) E.g.
 ```
 piNdilep N1440 N1535 negN1535 ...
 ```
@@ -111,14 +111,14 @@ will calculate the u-channel contribution of N(1675).
 
 #### Switches deciding what to calculate
 
-The following switches specify the target of the calculation, exactly one of them has to be given:
+The following options specify the target of the calculation, exactly one of them has to be given:
 
-* `event_gen`: generate events with a dilepton in the final state, list the electron and positron threemomenta.
-* `density_matrix`: calculate the virtual photon polarizzation density matrix for specific photon mass and
+* `event_gen`: generate events with a dilepton in the final state, list the electron and positron threemomenta
+* `density_matrix`: calculate the virtual photon polarization density matrix for specific photon mass and
                      scattering angle
 * `tab_density_matrix`: tabulate the density matrix, varying values of the photon mass and the scattering angle
 * etc.
 
 ##### `event_gen`
 
-The parameter `Nevent=<val>` is used to specify the number of events.
+The parameter `Nevent=<val>` is used to specify the number of generated events.
