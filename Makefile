@@ -1,13 +1,10 @@
-WORKDIR = /home/zetenyi/work
-ROOTNAME = pi-N
-ROOTDIR = $(WORKDIR)/$(ROOTNAME)
-INCLUDE_DIR = $(ROOTDIR)/include
-SOURCE_DIR = $(ROOTDIR)/src
-OBJ_DIR = $(ROOTDIR)/obj
-EXEC_DIR = $(ROOTDIR)/bin
-DOCS_DIR = $(ROOTDIR)/docs
-DEP_DIR = $(ROOTDIR)/.deps
-PREPROC_DIR = $(ROOTDIR)/preprocessed
+INCLUDE_DIR = include
+SOURCE_DIR = src
+OBJ_DIR = obj
+EXEC_DIR = bin
+DOCS_DIR = docs
+DEP_DIR = .deps
+PREPROC_DIR = preprocessed
 
 vpath %.h   $(INCLUDE_DIR)
 vpath %.hpp $(INCLUDE_DIR)
