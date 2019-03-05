@@ -1,5 +1,5 @@
 # pi-N
-> Codes for calculating dilepton production in pion+nucleon collisions.
+> Codes for calculating dilepton production in pion-nucleon collisions.
 
 This repository contains codes for the calculation of the angular distribution of di-electron production in pion-nucleon 
 collisions using the model of [1]. In addition to calculating differential cross sections and anysotropy
@@ -14,7 +14,8 @@ collisions"*, Phys. Lett. **B764** (2017) 282.
 ## Getting started
 ### Download
 
-If you are not using `git` and `GitHub`, just click on the green "Clone or download" button and in the popup window
+If you are not using `git` and `GitHub`, just click on the green "Clone or download" button in the top-right corner
+of the [project page](https://github.com/mzetenyi/pi-N) and in the popup window
 click "Download ZIP". Save the file and uncompress it.
 
 ### Compile
@@ -23,7 +24,7 @@ You need a c++11 compliant compiler and `make`. (I use g++ 4.8.5, and Gnu Make 4
 compiler in your $PATH, you should modify line 20 of the [Makefile](https://github.com/mzetenyi/pi-N/blob/master/Makefile)
 like this:
 ```
-CPP = <ful path of compiler>
+CPP = <ful_path_of_compiler>
 ```
 In order to compile, navigate to the 
 main directory of the project (called `pi-N-master` if you downloaded the ZIP file and `pi-N` if you used `git` to 
@@ -56,9 +57,9 @@ redirected to files by the `jobs` script.
 All parameters/options to the code can be specified in two ways:
 
 1. as a command line option in the form `parameter=<value>` (no spaces are allowed),
-2. in a file that is loaded by the command line option `load[<path of file>]`.
+2. in a file that is loaded by the command line option `load[<path_of_file>]`.
 
-As an example for the latter look at the file 
+As an example for the latter, look at the file 
 [dat/model_params](https://github.com/mzetenyi/pi-N/blob/master/dat/model_params).
 As you can see, some of the parameters are arranged in groups via
 ```
@@ -97,7 +98,7 @@ Contribution of each baryon resonance can be included in the calculation by spec
 The options `negN1440` or `negD1600` will multiply the corresponding amplitudes by -1. (This only effects the
 interference terms with other resonance contributions.)
 Including `sch` or `uch` in the command line results in a calculation of only s-channel (or only u-channel) contributions
-of all resonances. (The default is calculate both s- and u-channels.) E.g.
+of all resonances. (The default is to calculate both s- and u-channels.) E.g.
 ```
 piNdilep N1440 N1535 negN1535 ...
 ```
@@ -110,14 +111,14 @@ will calculate the u-channel contribution of N(1675).
 
 #### Switches deciding what to calculate
 
-The following switches specify the target of the calculation, exactly one of them has to be given:
+The following options specify the target of the calculation, exactly one of them has to be given:
 
-* `event_gen`: generate events with a dilepton in the final state, list the electron and positron threemomenta.
-* `density_matrix`: calculate the virtual photon polarizzation density matrix for specific photon mass and
+* `event_gen`: generate events with a dilepton in the final state, list the electron and positron threemomenta
+* `density_matrix`: calculate the virtual photon polarization density matrix for specific photon mass and
                      scattering angle
 * `tab_density_matrix`: tabulate the density matrix, varying values of the photon mass and the scattering angle
 * etc.
 
 ##### `event_gen`
 
-The parameter `Nevent=<val>` is used to specify the number of events.
+The parameter `Nevent=<val>` is used to specify the number of generated events.
