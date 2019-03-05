@@ -27,8 +27,8 @@ double O52(FourVector p, uint mu, uint nu, uint si, uint ta) {
                   );
 }
 
-dcomplex vertexrhopipi(double g, uint mu, FourVector q1, FourVector q2) {
-  return i_ * g * (q1(mu) - q2(mu));
+dcomplex vertexrhopipi(double g, uint mu, FourVector qp, FourVector qm) {
+  return i_ * g * (qp(mu) - qm(mu));
 }
 
 dcomplex vertexsipipi(double g, FourVector q1, FourVector q2) {
@@ -36,6 +36,21 @@ dcomplex vertexsipipi(double g, FourVector q1, FourVector q2) {
   return -i_ * g/(2*mpi) * (q1*q2);
 }
 
+
+DiracMatrix vertexNNpi(double g, FourVector q) {
+  const double mpi = Config::get<double>("pi_pm.mass");
+  return - g/mpi * gamma5_*gamma_(q);
+}
+
+DiracMatrix vertexNNrho(double g, uint mu, double kappa, FourVector k) {
+  const double mn = Config::get<double>("Nucleon.mass");
+  return i_*g/2. * (gamma_(mu) + kappa/(4.*mn)*(gamma_(mu)*gamma_(k) - gamma_(k)*gamma_(mu)));
+}
+
+DiracMatrix vertexNNrhopi(double g, uint mu) {
+  const double mpi = Config::get<double>("pi_pm.mass");
+  return g/mpi * gamma5_*gamma_(mu);
+}
 
 DiracMatrix vertex1hNpi(double g, halfint spinParity, FourVector q) {
   const double mpi_pm = Config::get<double>("pi_pm.mass");
@@ -235,5 +250,13 @@ DiracMatrix pro5half(FourVector p, double m, uint mu1, uint mu2, uint nu1, uint 
   return - 3./10. * (_G(p,m,mu1,nu1)*_G(p,m,mu2,nu2) + _G(p,m,mu1,nu2)*_G(p,m,mu2,nu1)) * gamma_unit
     + 1./5. * _G(p,m,mu1,mu2)*_G(p,m,nu1,nu2) * gamma_unit
     + 1./10. * (_T(p,m,mu1,nu1)*_G(p,m,mu2,nu2) + _T(p,m,mu2,nu2)*_G(p,m,mu1,nu1) + _T(p,m,mu1,nu2)*_G(p,m,mu2,nu1) + _T(p,m,mu2,nu1)*_G(p,m,mu1,nu2));
+}
+
+DiracMatrix fprop(FourVector p, double m) {
+  return i_*(gamma_(p) + m*gamma_unit) / (p*p - m*m);
+}
+
+dcomplex sprop(FourVector p, double m) {
+  return i_/(p*p - m*m);
 }
 

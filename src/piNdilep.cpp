@@ -12,7 +12,6 @@ using namespace std;
 
 /**
    Calculate diff. cross section of the process pi + N -> N + e+ + e-
-
 */
 
 const double alpha(1/137.036);
@@ -22,6 +21,12 @@ const double grho(4.96);
 
 bool sch(true);
 bool uch(true);
+bool Chk_gauge(false);
+bool Born(false);
+bool Born_s(false);
+bool Born_u(false);
+bool Born_t(false);
+bool Born_c(false);
 bool D1232(false);
 bool N1440(false);
 bool N1535(false);
@@ -36,7 +41,7 @@ bool N1680(false);
 double Gamma_rho(double m) {
   //static const double delta(0.3*GeV);
   static const double mpi_pm = Config::get<double>("pi_pm.mass");
-  static const double mpi_0 = Config::get<double>("pi_0.mass");
+  //static const double mpi_0 = Config::get<double>("pi_0.mass");
   //static const double mpi = (2.*mpi_pm + mpi_0)/3.;
   static const double mpi = mpi_pm;
   static const double mrho = Config::get<double>("rho.mass");
@@ -52,7 +57,7 @@ double Gamma_rho(double m) {
 
 double Gamma_R(double s, double m0, double G0, int l) {
   static const double mpi_pm = Config::get<double>("pi_pm.mass");
-  static const double mpi_0 = Config::get<double>("pi_0.mass");
+  //  static const double mpi_0 = Config::get<double>("pi_0.mass");
   //static const double mpi = (2.*mpi_pm + mpi_0)/3.;
   static const double mpi = mpi_pm;
   static const double mn = Config::get<double>("Nucleon.mass");
@@ -92,18 +97,28 @@ DiffSigma_piN_Ndilep::DiffSigma_piN_Ndilep(double srt, double M) :
   EN_in = (s-mpi2+mn2)/(2.*srt);
   Epi_in = (s+mpi2-mn2)/(2.*srt);
   pin_abs = sqrt(lambda(s,mpi2,mn2))/(2.*srt);
+  cerr << "incoming threemomentum: " << pin_abs << endl;
   p1 = FourVector(EN_in,0,0,-pin_abs);
   q = FourVector(Epi_in,0,0,pin_abs);
   P = p1+p2;
   EN_out = (s-M2+mn2)/(2.*srt);
   k0 = (s+M2-mn2)/(2.*srt);
   pout_abs = sqrt(lambda(s,M2,mn2))/(2.*srt);
+  cerr << "outgoing threemomentum: " << pout_abs << endl;
   F_rho = -e/grho * (M2)/(M2 - mrho*mrho + i_*sqrt(M2)*Gamma_rho(M));
   //F_rho = -e/grho * (M2)/(M2 - mrho*mrho + i_*mrho*Gamma_rho(M));
+  cerr << "F_rho = " << F_rho << endl;
+  cerr << "F_rho^2 = " << F_rho*conj(F_rho) << endl;
   }
 
-
+double DiffSigma_piN_Ndilep::u_Mandelstam(double costh) const {
+  double sinth = sqrt(1-costh*costh);
+  ThreeVector kk = pout_abs*ThreeVector(sinth,0,costh);
+  FourVector k = FourVector(k0,kk);
+  return (p1-k)*(p1-k);
+}
 //*
+
 
 /**
    Calculate the production density matrix
@@ -161,6 +176,7 @@ Array<dcomplex,2> DiffSigma_piN_Ndilep::rho_prod(double costh) const {
   //  PR(epsRem); PR(epsImm); PR(epsRe(-1)); PR(epsIm(-1));
 
   double uu = (p1-k)*(p1-k);
+  double tt = (p1-p2)*(p1-p2);
 
   //  if (uu>0) PR(uu);
 
@@ -177,10 +193,99 @@ Array<dcomplex,2> DiffSigma_piN_Ndilep::rho_prod(double costh) const {
   ubar_ ubar(half,p2);
   u_ u(half,p1);
 
+  Array<DiracMatrix,2> M_(idx(_1,_5),idx_lor);
+  for (halfint mu(0); mu<4; mu++) {
+    M_(_1,mu) = gamma5_*(gamma_(mu)*gamma_(k) - k(mu)*gamma_unit);
+    M_(_2,mu) = gamma5_/2.*((2.*p1(mu)-k(mu))*(2.*(q*k)-M2) - (2.*q(mu)-k(mu))*(2.*(p1*k)-M2));
+    M_(_3,mu) = gamma5_/2.*(gamma_(mu)*(2.*(p2*k)+M2) - (2.*p2(mu)+k(mu))*gamma_(k));
+    M_(_4,mu) = gamma5_/2.*(gamma_(mu)*(2.*(p1*k)-M2) - (2.*p1(mu)-k(mu))*gamma_(k));
+    M_(_5,mu) = gamma5_/2.*((2.*p2(mu)+k(mu))*(2.*(q*k)-M2) - (2.*q(mu)-k(mu))*(2.*(p2*k)+M2));
+  }
+
+  dcomplex A_VMD[6];
+  const double kan = Config::get<double>("ka_nngamma");
+  const double kap = Config::get<double>("ka_ppgamma");
+  const double kar = Config::get<double>("ka_NNrho");
+  const double f_NNpi = Config::get<double>("f_NNpi");
+  const double grho_tilde = Config::get<double>("grho_tilde");
+  
+  A_VMD[1] =
+    + 2.*mn*(1.+kar)*(1./(uu-mn2) - 1./(s-mn2));
+  A_VMD[2] = - 4.*mn/(uu-mn2)/(tt-mpi2);
+  A_VMD[3] = 2.*kar/(s-mn2);
+  A_VMD[4] = - 2.*kar/(uu-mn2);
+  A_VMD[5] = 4.*mn/(s-mn2)/(tt-mpi2);
+  for (int j(1); j<=5; j++) { A_VMD[j] *= grho_tilde*f_NNpi/(sqrt(2)*mpi); }
+
   for (halfint la1 : {-half,half}) {
     for (halfint la2 : {-half,half}) {
+      //-----------------  check gauge invariance via M_mu*k^mu = 0  -----------------
+      if (Chk_gauge) {
+        dcomplex CHK(0);
+        dcomplex CHK_s(0);
+        dcomplex CHK_u(0);
+        dcomplex CHK_t(0);
+        dcomplex CHK_c(0);
+        const double iso = sqrt(2.);
+        for (halfint mu(0); mu<4; mu++) {
+          CHK_s += -iso * ubar(0,la2) * vertexNNrho(1., mu, 0, -k) *
+            fprop(p2+k,mn) * vertexNNpi(1.,q) * u(0,la1) * k(mu)*sign_(mu);
+          CHK_u += iso * ubar(0,la2) * vertexNNpi(1.,q) *
+            fprop(p1-k,mn) * vertexNNrho(1., mu, 0, -k) * u(0,la1) * k(mu)*sign_(mu);
+          CHK_t += iso * ubar(0,la2) * vertexNNpi(1.,k-q) * u(0,la1) *
+            sprop(k-q,mpi) * vertexrhopipi(1., mu, k-q, q) * k(mu)*sign_(mu);
+          CHK_c += iso * ubar(0,la2) * vertexNNrhopi(1., mu) * u(0,la1) * k(mu)*sign_(mu);
+        }
+        CHK = CHK_s + CHK_u - CHK_t + CHK_c;
+        cerr << "\n----------------------------------------" << endl;
+        cerr << "Check gauge invariance" << endl;
+        cerr << "p2+k = " << p2+k << endl;
+        cerr << "ubar(0,la2) = " << ubar(0,la2) << endl;
+        cerr << "u(0,la1) = " << u(0,la1) << endl;
+        cerr << "s-channel propagator:  " << fprop(p2+k,mn) << endl;
+        cerr << "u-channel propagator:  " << fprop(p1-k,mn) << endl;
+        for (halfint mu(0); mu<4; mu++) {
+          cerr << "s-channel rho vertex:  " << endl;
+          cerr << "mu=" << mu << "  ->  " << vertexNNrho(1., mu, 0, -k) << endl;
+        }
+        cerr << "s-channel pion vertex: " << vertexNNpi(1.,q) << endl;
+        cerr << "----------------------------------------" << endl;
+        cerr << "la1, la2: " << la1 << " " << la2 << endl;
+        cerr << "CHK_s = " << CHK_s << endl;
+        cerr << "CHK_u = " << CHK_u << endl;
+        cerr << "CHK_t = " << CHK_t << endl;
+        cerr << "CHK_c = " << CHK_c << endl;
+        cerr << "CHK = " << CHK << endl;
+        cerr << "----------------------------------------" << endl;
+      }
       for (halfint mu(0); mu<4; mu++) {
         Mhad(la1,la2,mu) = 0;
+        //------------  Born terms  ------------------------------
+        if (Born) {
+          for (int j(1); j<=5; j++) {
+            Mhad(la1,la2,mu) += F_rho * ubar(0,la2) * A_VMD[j] * M_(_1*j,mu) * u(0,la1);
+          }
+        }
+        //------------  Born terms separately --------------------
+        if (Born_s) { // s-channel
+          const double iso = -sqrt(2.);
+          Mhad(la1,la2,mu) += F_rho * iso * ubar(0,la2) * vertexNNrho(grho_tilde, mu, kar, -k) *
+            fprop(p2+k,mn) * vertexNNpi(f_NNpi,q) * u(0,la1);
+        }
+        if (Born_u) { // u-channel
+          const double iso = sqrt(2.);
+          Mhad(la1,la2,mu) += F_rho * iso * ubar(0,la2) * vertexNNpi(f_NNpi,q) *
+            fprop(p1-k,mn) * vertexNNrho(grho_tilde, mu, kar, -k) * u(0,la1);
+        }
+        if (Born_t) { // t-channel
+          const double iso = sqrt(2.);
+          Mhad(la1,la2,mu) += F_rho * iso * ubar(0,la2) * vertexNNpi(f_NNpi,k-q) * u(0,la1) *
+            sprop(k-q,mpi) * vertexrhopipi(grho_tilde, mu, k-q, q);
+        }
+        if (Born_c) { // contact term
+          const double iso = sqrt(2.);
+          Mhad(la1,la2,mu) += F_rho * iso * ubar(0,la2) * vertexNNrhopi(f_NNpi*grho_tilde, mu) * u(0,la1);
+        }
         //------------  spin 1/2+  ------------------------------
         if (N1440) {
           const double mr = Config::get<double>("N1440.mass");
@@ -189,6 +294,11 @@ Array<dcomplex,2> DiffSigma_piN_Ndilep::rho_prod(double costh) const {
           const double g1 = Config::get<double>("N1440.g1");
           const double l = Config::get<int>("N1440.l");
           const dcomplex BWs = BW(s,mr,Gamma_R(s,mr,Gr,l));
+          // cerr << "BWs = " << BWs << endl;
+          // cerr << "Gamma_R = " << Gamma_R(s,mr,Gr,l) << endl;
+          // cerr << "s = " << s << endl;
+          // cerr << "mr = " << mr << endl;
+          // cerr << "Gr = " << Gr << endl;
           const dcomplex BWu = BW(uu,mr,0);
           const double iso_s = isoNs;
           const double iso_u = isoNu;
@@ -623,7 +733,7 @@ double DiffSigma_piN_Ndilep::dsig_pipi_dM() const {
 }
 
 void printHelp(char* name) {
-  cerr << "usage: " << name << " [(srt|plab)=<double val>] [nth=<int val>] [sch|uch|D1232|N1440|...] [theta|costh]" << endl;
+  cerr << "usage: " << name << " [(srt|plab)=<double val>] [nth=<int val>] [sch|uch|Born|Born_s(u,t,c)|D1232|N1440|...] [theta|costh]" << endl;
   cerr << "Order of options is arbitrary." << endl;
   exit(0);
 }
@@ -687,6 +797,12 @@ int main(int argc, char** argv) {
   if (Config::exists("uch")) sch=false;
   if (sch==false and uch==false) sch=uch=true;
 
+  if (Config::exists("Chk_gauge")) Chk_gauge=true;
+  if (Config::exists("Born"))  Born=true;
+  if (Config::exists("Born_s")) Born_s=true;
+  if (Config::exists("Born_u")) Born_u=true;
+  if (Config::exists("Born_t")) Born_t=true;
+  if (Config::exists("Born_c")) Born_c=true;
   if (Config::exists("D1232")) D1232=true;
   if (Config::exists("N1440")) N1440=true;
   if (Config::exists("N1535")) N1535=true;
@@ -700,7 +816,7 @@ int main(int argc, char** argv) {
   if (Config::exists("theta")) in_theta=true;
   if (Config::exists("costh")) in_theta=false;
 
-  if ( not (D1232 or N1440 or N1535 or N1520 or N1650 or N1675 or N1680 or D1600 or D1620) ) {
+  if ( not (Born or Born_s or Born_u or Born_t or Born_c or D1232 or N1440 or N1535 or N1520 or N1650 or N1675 or N1680 or D1600 or D1620) ) {
     cerr << "All channels switched off" << endl;
     exit(0);
   }
@@ -930,6 +1046,7 @@ int main(int argc, char** argv) {
     }
     cout << "# Differential cross section and anisotropy coefficient (B) of dilepton production in pi + N\n#" << endl;
     cout << setw(12) << (mass_spect ? "M (GeV)" : (in_theta ? "theta" : "costh")) << " ";
+    //cout << setw(15) << " u";
     cout << setw(15) << "dsig (mub/GeV)" << " " << setw(15) << "B" << endl;
     cout << "#" << endl;
     DiffSigma_piN_Ndilep dsigma(srt,M);
@@ -941,6 +1058,7 @@ int main(int argc, char** argv) {
         double costh = cos(theta);
         //        PL(costh) PL(costh_k) PR(phi_k);
         cout << setw(13) << theta;
+        //cout << setw(15) <<  dsigma.u_Mandelstam(costh);
         cout << " " << setw(15) << mub(dsigma.dsig_dMdcosth(costh));
         cout << " " << setw(15) << dsigma.B_coeff(costh);
         cout << endl;

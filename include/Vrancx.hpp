@@ -14,9 +14,15 @@ DiracMatrix O32(FourVector p, uint mu, uint la);
 double O52(FourVector p, uint mu, uint nu, uint la, uint ro, uint si, uint ta);
 double O52(FourVector p, uint mu, uint nu, uint la);
 
-dcomplex vertexrhopipi(double g, uint nu, FourVector q1, FourVector q2);
+dcomplex vertexrhopipi(double g, uint nu, FourVector qp, FourVector qm);
 
 dcomplex vertexsipipi(double g, FourVector q1, FourVector q2);
+
+DiracMatrix vertexNNpi(double g, FourVector q);
+
+DiracMatrix vertexNNrho(double g, uint mu, double kappa, FourVector q);
+
+DiracMatrix vertexNNrhopi(double g, uint mu);
 
 DiracMatrix vertex1hNpi(double g, halfint spinParity, FourVector q);
 
@@ -55,5 +61,8 @@ DiracMatrix _T(FourVector p, double m, uint mu, uint nu);
 
 DiracMatrix pro5half(FourVector p, double m, uint mu1, uint mu2, uint nu1, uint nu2);
 
+DiracMatrix fprop(FourVector p, double m);
+
+dcomplex sprop(FourVector p, double m);
 
 #endif // VRANCX_HPP

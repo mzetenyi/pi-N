@@ -20,6 +20,7 @@ double getd(std::string);
 class DiffSigma_piN_Ndilep {
 public:
   DiffSigma_piN_Ndilep(double srt, double M);
+  double u_Mandelstam(double costh) const;
   Array<dcomplex,2> rho_prod(double costh) const;
   double B_coeff(double costh) const;
   double B_coeff_pipi(double costh) const;

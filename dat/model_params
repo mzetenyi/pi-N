@@ -1,6 +1,21 @@
 gsipipi = 4.01631
 grho_tilde = 5.96
 
+g_NNpi = 13.4; // Dmitriev etal NPA 459 (1986) 503
+f_NNpi = 0.97; // Bergervoet et al. PRC 41 ('90) 1435
+//const double ka_NNrho(6.033); // taken from Engel et al. NPA 603 (1996) 387.
+                                // similar value (6.1) is given in Machleidt, Adv.Nucl.Phys. Vol.19
+                                //         (without explanation)
+                                //                would be better to use the data from Feuster, Mosel PRC 58 (1998) 457,
+                                // where 1.99 < ka_NNrho < 2.65 values are listed, and 2.07 < g_NNrho < 3.38
+                                //         (we have g_NNrho = 2.98)
+ka_NNrho = 2.3;
+
+// nucleon anomalous magnetic moment (Kaptari, Kampfer, NPA764 338 (2007)):
+// const double ka_ppgamma(1.793); // misprint; in PDG: ka_ppgamma = 2.793
+ka_ppgamma = 2.793;
+ka_nngamma = -1.913;
+
 pi_0 {
   spin = 0
   isospin = 1

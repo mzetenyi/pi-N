@@ -88,7 +88,7 @@ double Unit::readDimensional(const string& str) {
 map<string,double> Unit::units;
 
 namespace units_GeV {
-  const double hbarc = 0.19732; // GeV*fm
+  const double hbarc = 0.197327; // GeV*fm
   const Unit fm("fm",1./hbarc);
   const Unit GeV("GeV",1.);
   const Unit MeV("MeV",GeV/1000.);
